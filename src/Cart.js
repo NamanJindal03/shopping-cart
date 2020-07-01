@@ -27,6 +27,39 @@ class Card extends React.Component {
                     ]
         }
     }
+    handleIncreaseQuantity = (product) =>{
+        console.log('Heyy Please ', product);
+        const {products} = this.state;
+        //now we have to make changes in particular product, so we need to find that in all my proudcts
+        const index = products.indexOf(product);
+        products[index].qty += 1;
+        this.setState({
+            products
+        })
+    }
+    handleDecreaseQuantity = (product) =>{
+        console.log("called");
+        const {products} = this.state;
+        if(product.qty>0){
+            const index = products.indexOf(product);
+            products[index].qty -= 1;
+            this.setState({
+                products
+            })
+        }
+        
+    }
+    deleteProduct = (id) =>{
+        const {products} = this.state;
+        const items = products.filter((item)=> item.id !== id); // returns an array with  products except for the once which has the id that we passed
+        this.setState({
+            products: items
+        })
+    }
+    test = () =>{
+        console.log("naman");
+    }
+
     render() {
         const {products} = this.state;
         return(
@@ -36,6 +69,10 @@ class Card extends React.Component {
                     <CartItem 
                         product={product} 
                         key={product.id}
+                        onIncreaseQuantity= {this.handleIncreaseQuantity}
+                        onDecreaseQuantity={this.handleDecreaseQuantity}
+                        onDeleteQuantity = {this.deleteProduct}
+                        test = {this.test}
                     />
                     )
                 })}
@@ -45,3 +82,4 @@ class Card extends React.Component {
 }
 
 export default Card;
+
