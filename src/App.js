@@ -9,12 +9,14 @@ constructor(){
 					{
 						title : 'Phone',
 						price: '999',
+						img:'https://images.unsplash.com/photo-1520923642038-b4259acecbd7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1306&q=80',
 						qty: 1,
 						id:1
 					},
 					{
 						title : 'Watch',
 						price: '450',
+						img : 'https://images.unsplash.com/photo-1524805444758-089113d48a6d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80',
 						qty: 10,
 						id:2
 					},
@@ -22,6 +24,7 @@ constructor(){
 						title : 'Laptop',
 						price: '9999',
 						qty: 1,
+						img:'https://images.unsplash.com/photo-1504707748692-419802cf939d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1330&q=80',
 						id:3
 					},
 					
@@ -68,6 +71,17 @@ getCartCount = () =>{
 	})
 	return count;
 }
+getCartTotal = () => {
+    const { products } = this.state;
+
+    let cartTotal = 0;
+
+    products.map((product) => {
+      cartTotal = cartTotal + product.qty * product.price
+    })
+
+    return cartTotal;
+  }
 render(){
 	const {products} = this.state; 
 	return (
@@ -81,6 +95,7 @@ render(){
 			onDecreaseQuantity={this.handleDecreaseQuantity}
 			onDeleteQuantity = {this.deleteProduct}
 		/>
+		<div style={ {padding: 10, fontSize: 20} }>Total: {this.getCartTotal()}</div>
 	</div>
 	);
 }
