@@ -1,21 +1,10 @@
 import React from 'react'
-class CartItem extends React.Component {
+const CartItem = (props) => {
     
-    increaseQuantity = () =>{
-        console.log("this", this);
-        //method 1
-        // this.setState({
-        //     qty: this.state.qty + 1
-        // })
-        //method 2
-        this.setState((prevState) => {
-            return{
-                qty: prevState.qty + 1
-            } 
-        })
-    }
-    render() {
-        const {title, price, qty} = this.props.product;
+    
+    
+        const {title, price, qty} = props.product;
+        const{onIncreaseQuantity, onDecreaseQuantity, onDeleteQuantity, product} = props;
         return(
             <div className= "cart-item">
                 <div className="left-block">
@@ -31,26 +20,25 @@ class CartItem extends React.Component {
                             alt="increase" 
                             className="action-icons" 
                             src="https://image.flaticon.com/icons/svg/992/992651.svg" 
-                            onClick = {()=>this.props.onIncreaseQuantity(this.props.product)}
+                            onClick = {()=>onIncreaseQuantity(product)}
                         />
                         <img 
                             alt="decrease" 
                             className="action-icons" 
                             src="https://image.flaticon.com/icons/svg/1665/1665612.svg" 
-                            onClick= {()=> this.props.onDecreaseQuantity(this.props.product)}
+                            onClick= {()=> onDecreaseQuantity(product)}
                             //onClick= {this.props.test}
                         />
                         <img 
                             alt="delete" 
                             className="action-icons" 
                             src="https://image.flaticon.com/icons/svg/1214/1214428.svg" 
-                            onClick={()=> this.props.onDeleteQuantity(this.props.product.id)}
+                            onClick={()=> onDeleteQuantity(product.id)}
                         />
                     </div>
                 </div>
             </div>
         )
-    }
 }
 let style = {
     image : {
