@@ -1,35 +1,58 @@
 import React from 'react';
 import Cart from './Cart';
 import Navbar from './Navbar';
+import * as firebase from 'firebase';
 class App extends React.Component {
 constructor(){
 	super();
 	this.state = {
-		products:[
-					{
-						title : 'Phone',
-						price: '999',
-						img:'https://images.unsplash.com/photo-1520923642038-b4259acecbd7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1306&q=80',
-						qty: 1,
-						id:1
-					},
-					{
-						title : 'Watch',
-						price: '450',
-						img : 'https://images.unsplash.com/photo-1524805444758-089113d48a6d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80',
-						qty: 10,
-						id:2
-					},
-					{
-						title : 'Laptop',
-						price: '9999',
-						qty: 1,
-						img:'https://images.unsplash.com/photo-1504707748692-419802cf939d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1330&q=80',
-						id:3
-					},
-					
-				]
+		products:[],
+		loader: true
 	}
+}
+componentDidMount(){
+	console.log("in component did mount");
+	firebase
+		.firestore()
+		.collection('products')
+		//.onsnapshot is a method given by firebase, it is basically a listener on the database, whenever database updates this
+		//onsnapshot is fired again, and hence our state is set with the new updated producgt
+		.onSnapshot((snapshot) => {
+			console.log(snapshot);
+			snapshot.docs.map((doc)=>{
+				console.log("messgae doc", doc.data());
+			})
+			const products = snapshot.docs.map((doc) => {
+				const data = doc.data();
+				data['id']= doc.id
+				return data;
+			})
+			console.log(products);
+
+			this.setState({
+				products,
+				loader: false
+			})
+		})
+		// .get()
+		// .then((snapshot) => {
+		// 	console.log(snapshot);
+		// 	snapshot.docs.map((doc)=>{
+		// 		console.log("messgae doc", doc.data());
+		// 	})
+		// 	const products = snapshot.docs.map((doc) => {
+		// 		const data = doc.data();
+		// 		data['id']= doc.id
+		// 		return data;
+		// 	})
+		// 	console.log(products);
+
+		// 	this.setState({
+		// 		products,
+		// 		loader: false
+		// 	})
+		// })
+		
 }
 handleIncreaseQuantity = (product) =>{
 	console.log('Heyy Please ', product);
@@ -77,13 +100,13 @@ getCartTotal = () => {
     let cartTotal = 0;
 
     products.map((product) => {
-      cartTotal = cartTotal + product.qty * product.price
+	  cartTotal = cartTotal + product.qty * product.price;
+	  return cartTotal;
     })
-
-    return cartTotal;
+	return cartTotal;
   }
 render(){
-	const {products} = this.state; 
+	const {products, loader} = this.state; 
 	return (
 	<div className="App">
 		<Navbar 
@@ -95,6 +118,7 @@ render(){
 			onDecreaseQuantity={this.handleDecreaseQuantity}
 			onDeleteQuantity = {this.deleteProduct}
 		/>
+		{loader && <h1>Loading Products ....</h1>}
 		<div style={ {padding: 10, fontSize: 20} }>Total: {this.getCartTotal()}</div>
 	</div>
 	);
